@@ -274,7 +274,7 @@ h6 {
 
 @keyframes preloaderfinish {
   0% {
-    width: 5 0%;
+    width: 50%;
   }
 
   100% {
@@ -1264,19 +1264,4 @@ h6 {
 
 .footer .credits a {
   color: var(--color-primary);
-}
-.logo-circle {
-    width: 50px; /* Ajustez la taille du cercle selon vos besoins */
-    height: 50px; /* Ajustez la taille du cercle selon vos besoins */
-    border-radius: 50%; /* Transforme le conteneur en cercle */
-    overflow: hidden; /* Assure que l'image est bien dans la forme du cercle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.logo-circle img {
-    width: 100%; /* Ajuste la taille de l'image pour remplir le cercle */
-    height: auto; /* Garantit le redimensionnement proportionnel de l'image */
-    border-radius: 50%; /* Applique également le bord du cercle à l'image */
 }
