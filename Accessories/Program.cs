@@ -1,4 +1,5 @@
 using Accessories.Models;
+using Accessories.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AccessorieDBConnection")));
-
+builder.Services.AddScoped<CategoryRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
