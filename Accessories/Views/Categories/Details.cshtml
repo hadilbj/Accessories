@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Accessories.Models.Category
+
 @{
+    ViewData["Title"] = "Details";
 }
+
+<h1 style="color: #412C1F;">Categories Details</h1>
+
+<div class="container mt-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th colspan="2" style="background-color: #412C1F; color: white; text-align: center;">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Category Name</td>
+                <td>@Html.DisplayFor(model => model.CategoryName)</td>
+            </tr>
+            <tr>
+                <td>Category Description</td>
+                <td>@Html.DisplayFor(model => model.CategoryDescription)</td>
+            </tr>
+            <tr>
+                <td>Category Photo</td>
+                <td>@Html.DisplayFor(model => model.CategoryPhoto)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.CategoryId" class="btn btn-primary" style="background-color: #412C1F; color: white;">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary" style="background-color: #412C1F; color: white;">Back To List</a>
+</div>
