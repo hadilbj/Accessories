@@ -1,0 +1,47 @@
+﻿@model Accessories.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 style="color: #412C1F;">Product Details</h1>
+
+<div class="container mt-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th colspan="2" style="background-color: #412C1F; color: white; text-align: center;">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Product Name</td>
+                <td>@Html.DisplayFor(model => model.Name)</td>
+            </tr>
+            <tr>
+                <td>Product Description</td>
+                <td>@Html.DisplayFor(model => model.Description)</td>
+            </tr>
+            <tr>
+                <td>Product Price</td>
+                <td>@Html.DisplayFor(model => model.Price)</td>
+            </tr>
+            <tr>
+                <td>Category ID</td>
+                <td>@Html.DisplayFor(model => model.Catid)</td>
+            </tr>
+            <tr>
+                <td>Product Photo</td>
+                <td>@Html.DisplayFor(model => model.Photo)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center mt-3">
+     <form method="post" asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.Id">
+        <button type="submit" class="btn btn-success" style="background-color: #412C1F; color: white;">Add to Cart</button>
+    </form>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary" style="background-color: #412C1F; color: white;">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary" style="background-color: #412C1F; color: white;">Back To List</a>
+</div>

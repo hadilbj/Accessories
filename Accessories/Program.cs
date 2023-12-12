@@ -8,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AccessorieDBConnection")));
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>(); // Register IProductRepository
 builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<ProductRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
