@@ -1,10 +1,12 @@
 ﻿using Accessories.Models;
 using Accessories.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Accessories.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class CategoriesController : Controller
     {
         private readonly CategoryRepository categoryRepository;
@@ -13,6 +15,7 @@ namespace Accessories.Controllers
         {
             this.categoryRepository = categoryRepository;
         }
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var model = categoryRepository.GetAll();

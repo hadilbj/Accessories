@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Hosting; // Ajout de la référence pour IWebHostEnvi
 using Accessories.ViewModels;
 using Products.Models.Repositories;
 using Accessories.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Accessories.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class ProductController : Controller
     {
         private readonly ProductRepository productRepository;
@@ -22,6 +24,7 @@ namespace Accessories.Controllers
             this.webHostEnvironment = webHostEnvironment;
 
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var model = productRepository.GetAll();
