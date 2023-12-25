@@ -1,0 +1,20 @@
+﻿@model List<Accessories.Models.Cart>
+
+<tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ProductId</td>
+            <td>
+                <input type="number" id="quantity-@item.Id" value="@item.Quantity" min="1" /> 
+                <button onclick="updateQuantity(@item.Id)">Update</button>
+            </td>
+            <td>
+                <form method="post" asp-action="RemoveFromCart" asp-route-cartItemId="@item.Id">
+                    @Html.AntiForgeryToken()
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+    }
+</tbody>

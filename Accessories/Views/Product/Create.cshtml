@@ -1,48 +1,54 @@
-﻿@model Accessories.Models.Product
+﻿@model Accessories.ViewModels.ProductViewModel
 
 @{
-    ViewData["Title"] = "Create Product";
+    ViewData["Title"] = "Create";
 }
 
 <h1 style="color: #412C1F;">Create Product</h1>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+<hr />
+<div class="row">
+    <div class="col-md-4" style="color: #412C1F;">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!--    <div class="form-group">
+                <label asp-for="productid" class="control-label"></label>
+                <input asp-for="productid" class="form-control" />
+                <span asp-validation-for="productid" class="text-danger"></span>
+            </div> -->
             <div class="form-group" style="color: #412C1F;">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
             <div class="form-group" style="color: #412C1F;">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-
             <div class="form-group" style="color: #412C1F;">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-
-            <div class="form-group" style="color: #412C1F;">
-                <label asp-for="Catid" class="control-label"></label>
-                <input asp-for="Catid" class="form-control" />
-                <span asp-validation-for="Catid" class="text-danger"></span>
+            <div class="form-group row" style="color: #412C1F;">
+                <label asp-for="Photo" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <div class="custom-file">
+                        <input asp-for="Photo" class="form-control custom-file-input">
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                </div>
             </div>
-
             <div class="form-group" style="color: #412C1F;">
-                <label asp-for="Photo" class="control-label"></label>
-                <input asp-for="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <label asp-for="categoryid" class="control-label"></label>
+                <input asp-for="categoryid" class="form-control" />
+                <span asp-validation-for="categoryid" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <button type="submit" style="background-color: #412C1F; color: white;" class="btn btn-primary">Create</button>
+                <input type="submit" value="Create" class="btn btn-primary" style="background-color: #412C1F; color: white;"/>
             </div>
         </form>
     </div>
@@ -53,5 +59,12 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+        $('.custom-file-input').on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).next('.custom-file-label').html(fileName);
+        });
+        });
+    </script>
 }

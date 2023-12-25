@@ -7,5 +7,6 @@
         void Edit (Cart cart);
         void Delete(Cart cart);
         void Update(Cart cart);
+        Cart GetCartItemById(int cartItemId);
     }
 }

@@ -23,9 +23,6 @@
                         @Html.DisplayNameFor(model => model.CategoryDescription)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.CategoryPhoto)
-                    </th>
-                    <th>
                         Actions
                     </th>
                 </tr>
@@ -39,9 +36,6 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.CategoryDescription)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CategoryPhoto)
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a>

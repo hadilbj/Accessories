@@ -32,7 +32,6 @@ namespace Accessories.Models.Repositories
             {
                 category1.CategoryName = category.CategoryName;
                 category1.CategoryDescription = category.CategoryDescription;
-                category1.CategoryPhoto = category.CategoryPhoto;
                 context.SaveChanges();
             }
         }

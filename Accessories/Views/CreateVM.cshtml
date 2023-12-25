@@ -1,0 +1,17 @@
+﻿@model Accessories.ViewModels.ProductViewModel
+
+<form method="post" asp-action="Index" asp-controller="Home" enctype="multipart/form-data">
+
+	<div class="form-group">
+		<label asp-for="Description"></label>
+		<input asp-for="Description" class="form-control" />
+	</div>
+
+	<div class="form-group">
+		<label asp-for="Photo"></label>
+		<input asp-for="Photo" class="form-control" />
+	</div>
+
+	<input type="submit" value="upload" class="btn btn-primary" />
+
+</form>

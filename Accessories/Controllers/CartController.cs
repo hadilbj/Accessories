@@ -1,19 +1,23 @@
 ﻿using Accessories.Models;
 using Accessories.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Accessories.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartRepository cartRepository;
         private readonly IProductRepository productRepository;
+        private readonly AppDbContext context;
 
-        public CartController(ICartRepository cartRepository, IProductRepository productRepository)
+        public CartController(ICartRepository cartRepository, IProductRepository productRepository, AppDbContext context)
         {
             this.cartRepository = cartRepository;
             this.productRepository = productRepository;
+            this.context = context;
         }
 
         public IActionResult Index()
@@ -25,58 +29,62 @@ namespace Accessories.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToCart(int productId, string userId, int quantity)
+        public async Task <IActionResult> AddToCart(int productId)
         {
-            // Add logic to retrieve product information by productId
-            // This could involve another repository for products
+            Product pro = await context.Products.FindAsync(productId);
+            string json = Request.Cookies["Cart"];
 
-            // Create a new Cart object with the provided information
-            Cart cartItem = new Cart
+            List<Cart> panier = string.IsNullOrEmpty(json)
+                ? new List<Cart>()
+                : JsonConvert.DeserializeObject<List<Cart>>(json) ?? new List<Cart>();
+            Cart panier1 = panier.Where(p => p.Id == productId).FirstOrDefault();
+
+            if (panier1 == null)
             {
-                UserId = userId,
-                ProductId = productId,
-                Quantity = quantity
-            };
-
-            // Add the cart item to the repository
-            cartRepository.Add(cartItem);
-
-            // Redirect to the cart index page
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult AddProductToCart(int productId)
-        {
-            var product = productRepository.GetById(productId);
-
-            if (product != null)
-            {
-                // Add the product to the cart
-                var cartItem = new Cart
-                {
-                    UserId = "userId", // Replace with the actual user ID
-                    ProductId = product.Id,
-                    Quantity = 1 // You might want to allow the user to specify the quantity
-                };
-
-                cartRepository.Add(cartItem);
+                panier.Add(new Cart(pro));
+                TempData["Message"] = "Product added successfully.";
             }
+            else
+            {
+                panier1.Quantity += 1;
+                TempData["Message"] = "Product quantity increased successfully.";
+            }
+            Response.Cookies.Append("Panier", JsonConvert.SerializeObject(panier));
 
-            // Redirect to the cart index page
+
             return RedirectToAction("Index");
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RemoveFromCart(int cartItemId)
+        {
+            Cart cartItem = cartRepository.GetCartItemById(cartItemId);
+
+            if (cartItem != null)
+            {
+                cartRepository.Delete(cartItem);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult UpdateQuantity(int cartItemId, int newQuantity)
         {
             // Retrieve cart item by ID
             Cart cartItem = cartRepository.GetAll().FirstOrDefault(c => c.Id == cartItemId);
 
             if (cartItem != null)
             {
-                // Remove the cart item from the repository
-                cartRepository.Delete(cartItem);
+                // Update the quantity of the cart item
+                cartItem.Quantity = newQuantity;
+                cartRepository.Update(cartItem);
             }
 
             // Redirect to the cart index page

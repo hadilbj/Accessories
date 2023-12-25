@@ -9,9 +9,13 @@
         }
         public void Add(Cart cart)
         {
+            // Set a default value for UserId if it is null
+            cart.UserId ??= "DefaultUserId";
+
             context.Carts.Add(cart);
             context.SaveChanges();
         }
+
 
         public void Delete(Cart cart)
         {
@@ -38,6 +42,11 @@
         public IList<Cart> GetAll()
         {
             return context.Carts.OrderBy(c => c.UserId).ToList();
+        }
+
+        public Cart GetCartItemById(int cartItemId)
+        {
+            return context.Carts.Find(cartItemId);
         }
 
         public void Update(Cart cart)

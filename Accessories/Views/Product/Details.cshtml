@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = "Details";
+     //var photo = "../images/"+ (Model.Photo ?? "img.png");
+     var photo = Model?.Photo != null ? "../images/" + Model.Photo : "../images/bracelet.jpeg";
+
+}
 }
 
 <h1 style="color: #412C1F;">Product Details</h1>
@@ -28,20 +32,15 @@
             </tr>
             <tr>
                 <td>Category ID</td>
-                <td>@Html.DisplayFor(model => model.Catid)</td>
+                <td>@Html.DisplayFor(model => model.categoryid)</td>
             </tr>
             <tr>
                 <td>Product Photo</td>
                 <td>@Html.DisplayFor(model => model.Photo)</td>
             </tr>
+            <tr><img src="@photo"/></tr>
         </tbody>
     </table>
 </div>
 
-<div class="text-center mt-3">
-     <form method="post" asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.Id">
-        <button type="submit" class="btn btn-success" style="background-color: #412C1F; color: white;">Add to Cart</button>
-    </form>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary" style="background-color: #412C1F; color: white;">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary" style="background-color: #412C1F; color: white;">Back To List</a>
-</div>
+

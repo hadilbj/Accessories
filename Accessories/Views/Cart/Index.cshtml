@@ -1,5 +1,6 @@
 ﻿<!-- Views/Cart/Index.cshtml -->
 @model List<Accessories.Models.Cart>
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 <h2 style="color: #412C1F;">Your Shopping Cart</h2>
 
@@ -10,17 +11,24 @@
             <tr>
                 <th>Product</th>
                 <th>Quantity</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
+        @await Html.PartialAsync("CartTablePartial", Model)
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
                     <td>@item.ProductId</td>
-                    <td>@item.Quantity</td>
                     <td>
-                        <a asp-action="RemoveFromCart" asp-route-cartItemId="@item.Id">Remove</a>
+                        <input type="number" id="quantity-@item.Id" value="@item.Quantity" min="1" /> 
+                        <button onclick="updateQuantity(@item.Id)">Update</button>
+                    </td>
+                    <td>
+                        <form method="post" asp-action="RemoveFromCart" asp-route-cartItemId="@item.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit">Remove</button>
+                        </form>
                     </td>
                 </tr>
             }
@@ -31,3 +39,44 @@ else
 {
     <p style="color:black">Your shopping cart is empty.</p>
 }
+
+@section scripts {
+    <script>
+        function updateQuantity(cartItemId) {
+            var newQuantity = $("#quantity-" + cartItemId).val();
+
+            // Validate newQuantity (add more validation if needed)
+            if (isNaN(newQuantity) || newQuantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            // Confirmation dialog
+            if (!confirm("Are you sure you want to update the quantity?")) {
+                return;
+            }
+
+            // Include anti-forgery token
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            // Send AJAX request to update quantity
+            $.ajax({
+                type: "POST",
+                url: "/Cart/UpdateQuantity",
+                data: { cartItemId: cartItemId, newQuantity: newQuantity, __RequestVerificationToken: token },
+                success: function () {
+                    // Update the quantity in the current page without reloading
+                    alert("Quantity updated successfully!");
+                },
+                error: function () {
+                    alert("Error updating quantity. Please try again.");
+                }
+            });
+        }
+    </script>
+}
+
+<div>
+    <a asp-controller="Product" asp-action="Index">Back to Product List</a>
+</div>
+0

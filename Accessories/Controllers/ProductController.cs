@@ -1,6 +1,11 @@
-﻿using Accessories.Models;
+﻿
+using Accessories.Models;
 using Accessories.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting; // Ajout de la référence pour IWebHostEnvironment
+using Accessories.ViewModels;
+using Products.Models.Repositories;
+using Accessories.Models;
 
 namespace Accessories.Controllers
 {
@@ -8,11 +13,14 @@ namespace Accessories.Controllers
     {
         private readonly ProductRepository productRepository;
         private readonly ICartRepository cartRepository;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductController(ProductRepository productRepository, ICartRepository cartRepository)
+        public ProductController(IWebHostEnvironment webHostEnvironment, ProductRepository productRepository, ICartRepository cartRepository)
         {
             this.productRepository = productRepository;
             this.cartRepository = cartRepository;
+            this.webHostEnvironment = webHostEnvironment;
+
         }
         public IActionResult Index()
         {
@@ -20,9 +28,9 @@ namespace Accessories.Controllers
             return View(model);
         }
 
-        public ActionResult Details (int id)
+        public ActionResult Details (int v)
         {
-            var model = productRepository.GetById(id);
+            var model = productRepository.GetById(v);
             return View(model);
         }
 
@@ -35,18 +43,38 @@ namespace Accessories.Controllers
         //POST : create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductViewModel model)
         {
-            try
+
+
+            if (ModelState.IsValid)
             {
-                productRepository.Add(product);
-                return RedirectToAction(nameof(Index));
+                string uniqueFileName = null;
+                // If the Photo property on the incoming model object is not null, then the user has selected an image to upload.
+                if (model.Photo != null)
+                {
+                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+
+                Product newPro = new Product
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    Price = model.Price,
+                    categoryid = model.categoryid,
+                    Photo = uniqueFileName
+                };
+                productRepository.Add(newPro);
+                return RedirectToAction("details", new { id = newPro.Id });
             }
-            catch
-            {
-                return View();
-            }
+            return View();
         }
+
 
         //GET : edit
         public ActionResult Edit (int id)
@@ -98,5 +126,18 @@ namespace Accessories.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult CreateVM ()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateVM(ProductViewModel productvm)
+        {
+            string filename = productvm.Photo.FileName;
+
+            return View();
+        }
     }
 }

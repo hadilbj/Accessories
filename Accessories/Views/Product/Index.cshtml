@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Products Index";
+  
 }
 
 <h1 style="color: #412C1F;">Products List</h1>
@@ -26,7 +27,7 @@
                         @Html.DisplayNameFor(model => model.Price)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Catid)
+                        @Html.DisplayNameFor(model => model.categoryid)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Photo)
@@ -39,6 +40,7 @@
             <tbody>
                 @foreach (var product in Model)
                 {
+                    var photo = "../images/"+ (product.Photo);
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => product.Name)
@@ -50,10 +52,11 @@
                             @Html.DisplayFor(modelItem => product.Price)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => product.Catid)
+                            @Html.DisplayFor(modelItem => product.categoryid)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => product.Photo)
+                            @* Affiche l'image à partir de l'URL ou du chemin *@
+                            <img src="@photo" alt="Product Photo" style="max-width: 100px; max-height: 100px;" />
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
