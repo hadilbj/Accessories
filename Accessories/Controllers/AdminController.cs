@@ -1,10 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Accessories.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Accessories.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly RoleManager<IdentityRole> roleManager;
+        public AdminController(RoleManager<IdentityRole> roleManager)
+        {
+            this.roleManager = roleManager;
+        }
         // GET: AdminController
         public ActionResult Index()
         {
@@ -18,7 +25,7 @@ namespace Accessories.Controllers
         }
 
         // GET: AdminController/Create
-        public ActionResult Create()
+        public IActionResult CreateRole()
         {
             return View();
         }
@@ -26,58 +33,27 @@ namespace Accessories.Controllers
         // POST: AdminController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task <ActionResult> CreateRole (CreateRoleViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                IdentityRole role = new IdentityRole { Name = model.RoleName };
+                IdentityResult result = await roleManager.CreateAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach(IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
-
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public ActionResult ListRoles()
         {
-            return View();
+            var roles = roleManager.Roles;
+            return View(roles);
         }
-
-        // POST: AdminController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
 }
